@@ -1,0 +1,4 @@
+# ignores
+.idea/
+out/
+*.iml
