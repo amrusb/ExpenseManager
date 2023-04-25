@@ -10,8 +10,6 @@ public class User {
     private static char[] password;
     private static String email;
     private static LinkedList<Expense> expenseLinkedList = null;
-    private static Statement stat;
-    private static ResultSet rs;
 
     public User(String userName, char[] userPassword){
         name = userName;
@@ -26,11 +24,15 @@ public class User {
      *  Loguje uzytkownika do programu sprawdzajac czy uzytkownik znajduje sie w bazie danych
      *  oraz poprawnosc hasla
      *  @return Outcome wartosc powodzenia operacji
+     *          (1) Outcome.ACCESS_GRANTED jezeli uzytkownik zalogowal sie pomyslnie
+     *          (2) Outcome.INVALID_USERNAME jezeli uzytkownik wprowadzil bledna nazwe uzytkownika
+     *          (3) Outcome.INVALID_PASSWORD jezeli uzytkownik wprowadzil bledne haslo
+     *          (4) Outcome.ACCESS_DENIED w przeciwnym wypadku
      */
     public Outcome logIn(){
         try{
             String command = "SELECT password FROM users WHERE users.name = " + "'" + name + "'";
-            stat = Main.getStatement();
+            Statement stat = Main.getStatement();
             ResultSet rs = stat.executeQuery(command);
             if(rs.next()){
                 var dbPass = rs.getString(1);
@@ -54,33 +56,46 @@ public class User {
         return Outcome.ACCESS_DENIED;
     }
     /*
+    * Dodaje nowy wydatek do listy wydatkow LinkedList*/
+    public static void addExpense(Expense newExpense){
+        if(expenseLinkedList == null) expenseLinkedList = new LinkedList<>();
+        expenseLinkedList.add(newExpense);
+    }
+    /*
+    * Usuwa konkretny wydatek z listy wydatkoow LinkedList
+    * */
+    public static void removeExpense(Expense expense){
+        expenseLinkedList.remove(expense);
+    }
+    /*
+    * Pobiera z bazy danych wydatki uzytkownika i dodaje je do LinkedList
     * */
     public void getUserExpenses(){
-        String message = "SELECT e.name, e.amount, ec.name AS category, e.expense_date " +
+        String message = "SELECT e.expense_id, e.name, e.amount, ec.name AS category, e.expense_date " +
                 "FROM expenses e " +
                 "JOIN users u using(user_id) " +
                 "JOIN expense_categories ec USING(category_id) " +
                 "WHERE u.name = '" + name + "'";
         try{
-            stat = Main.getStatement();
-            rs = stat.executeQuery(message);
+            Statement stat = Main.getStatement();
+            ResultSet rs = stat.executeQuery(message);
             if(rs.next()){
-                String name = rs.getString(1);
-                double amount = rs.getDouble(2);
-                String category = rs.getString(3);
-                String date = rs.getString(4);
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                double amount = rs.getDouble(3);
+                String category = rs.getString(4);
+                String date = rs.getString(5);
                 expenseLinkedList = new LinkedList<>();
-                var newExpense = new Expense(name, amount, category, date);
-                System.out.println(newExpense.toString());
+                var newExpense = new Expense(name, amount, category, date, id);
                 expenseLinkedList.add(newExpense);
             }
             while(rs.next()){
-                String name = rs.getString(1);
-                double amount = rs.getDouble(2);
-                String category = rs.getString(3);
-                String date = rs.getString(4);
-                var newExpense = new Expense(name, amount, category, date);
-                System.out.println(newExpense.toString());
+                int id = rs.getInt(1);
+                String name = rs.getString(2);
+                double amount = rs.getDouble(3);
+                String category = rs.getString(4);
+                String date = rs.getString(5);
+                var newExpense = new Expense(name, amount, category, date, id);
                 expenseLinkedList.add(newExpense);
             }
         }catch(SQLException e){
@@ -94,10 +109,18 @@ public class User {
     * */
     public void logOut(){
         Main.setLoggedUser(null);
+        EditExpenseDialog.clear();
+        AddNewExpenseDialog.clear();
+        LoggingDialog.clear();
+        CreateAccountDialog.clear();
     }
     /*
      * Tworzy nowe rekord tabeli persons i wstawia go do bazy danych
-     * @return Outcome wartosc powodzenia operacji
+     * @return wartosc powodzenia operacji
+     *          (1) Outcome.ACCOUNT_CREATED jesli konto zostalo poprawnie utworzone
+     *          (2) Outcome.USER_NAME_USED jezeli podana nazwa uzytkownika juz jest w bazie danych
+     *          (3) Outcome.EMAIL_USED jezeli podany adres e-mail zotal juz jest w bazie danych
+     *          (4) Outcome.ERROR w przeciwnym wypadku
      * */
     public static Outcome createAccount(){
         if(!checkUserName()){
@@ -110,9 +133,10 @@ public class User {
                         + password + ", "
                         + email + ");";
                 try{
-                    stat = Main.getStatement();
-                    System.out.println(stat.executeUpdate(insert));
-                    return Outcome.ACCOUNT_CREATED;
+                    Statement stat = Main.getStatement();
+                    if(stat.executeUpdate(insert) == 1)
+                        return Outcome.ACCOUNT_CREATED;
+                    else return Outcome.ERROR;
                 }catch(SQLException e){
                     System.out.println("SQLException: " + e.getMessage());
                     System.out.println("SQLState: " + e.getSQLState());
@@ -126,7 +150,11 @@ public class User {
     /*
      * Pobiera od uzytkownika nowe dane konta
      * i aktualizuje dany rekord w bazie danych
-     * @return Outcome wartosc powodzenia operacji
+     * @return wartosc powodzenia operacji
+     *          (1) Outcome.ACCOUNT_EDITED jesli konto zostalo pomyslnie zedytowane
+     *          (2) Outcome.USER_NAME_USED jezeli podana nazwa uzytkownika juz jest w bazie danych
+     *          (3) Outcome.EMAIL_USED jezeli podany adres e-mail zotal juz jest w bazie danych
+     *          (4) Outcome.ERROR w przeciwnym wypadku
      * */
     public static Outcome editAccount(String newUserName, char[] newPassword, String newEmail){
         if(newUserName.compareTo(name) != 0)
@@ -146,9 +174,8 @@ public class User {
                 "password = '"+ password + "', " +
                 "email =  '" + newEmail + "' " +
                 "WHERE name = '" + name + "';";
-        System.out.println(update);
         try{
-            stat = Main.getStatement();
+            Statement stat = Main.getStatement();
             if(stat.executeUpdate(update) != 0){
                 setName(newUserName);
                 setPassword(newPassword);
@@ -165,19 +192,20 @@ public class User {
     }
     /*
      *  Usuwa konto z bazy danych, usuwajac
-     *  @return Outcome wartosc powodzenia operacji
+     * @return wartosc powodzenia operacji
+     *          (1) Outcome.ACCOUNT_DELETED jesli konto zostalo pomyslnie usuniete
+     *          (2) Outcome.ERROR w przeciwnym wypadku
      * */
     public static Outcome deleteAccount(){
         String deleteUser = "DELETE FROM users WHERE name = '" + name + "'";
         String deleteExpenses = "DELETE FROM expenses WHERE user_id = " +
                 "(SELECT user_id FROM users WHERE name = '" + name + "')";
         try{
-            stat = Main.getStatement();
-            if(stat.executeUpdate(deleteExpenses) != 0)
-                //usuniecie wytatkow uzytkownika udalo sie
-                if(stat.executeUpdate(deleteUser) != 0)
-                    //usuniecie uzytkownika udalo sie
-                    return Outcome.ACCOUNT_DELETED;
+            Statement stat = Main.getStatement();
+            stat.executeUpdate(deleteExpenses);
+            if(stat.executeUpdate(deleteUser) != 0)
+                //usuniecie uzytkownika udalo sie
+                return Outcome.ACCOUNT_DELETED;
             else return Outcome.ERROR;
         }catch(SQLException e){
             System.out.println("SQLException: " + e.getMessage());
@@ -189,14 +217,14 @@ public class User {
     /*
      * Sprawdza czy uzytkownik o danej nazwie jest juz w bazie danych
      * @param conn obiekt przechowujacy polaczenie z baza danych
-     * @return boolean.true jesli jest już uzytkownik o takiej nazwie
-     *         boolean.false w przeciwnym przypadku
+     * @return (1) true jesli jest już uzytkownik o takiej nazwie
+     *         (2) false w przeciwnym przypadku
      * */
     public static boolean checkUserName(){
         try{
-            stat = Main.getStatement();
+            Statement stat = Main.getStatement();
             String command = "SELECT name FROM users WHERE name = '" + name + "';";
-            rs = stat.executeQuery(command);
+            ResultSet rs = stat.executeQuery(command);
             return rs.next();
         }catch(SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
@@ -209,14 +237,14 @@ public class User {
      * Sprawdza czy uzytkownik o danej nazwie jest juz w bazie danych
      * @param conn obiekt przechowujacy polaczenie z baza danych
      * @param name nazwa uzytkownika do sprawdzenia w DB
-     * @return boolean.true jesli jest już uzytkownik o takiej nazwie
-     *         boolean.false w przeciwnym przypadku
+     * @return (1) true jesli jest już uzytkownik o takiej nazwie
+     *         (2) false w przeciwnym przypadku
      * */
     public static boolean checkUserName(String name){
         try{
-            stat = Main.getStatement();
+            Statement stat = Main.getStatement();
             String command = "SELECT name FROM users WHERE name = '" + name + "';";
-            rs = stat.executeQuery(command);
+            ResultSet rs = stat.executeQuery(command);
             return rs.next();
         }catch(SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
@@ -233,9 +261,9 @@ public class User {
      * */
     public static boolean checkUserEmail() {
         try {
-            stat = Main.getStatement();
+            Statement stat = Main.getStatement();
             String command = "SELECT email FROM users WHERE email = '" + email + "';";
-            rs = stat.executeQuery(command);
+            ResultSet rs = stat.executeQuery(command);
             return rs.next();
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
@@ -253,9 +281,9 @@ public class User {
      * */
     public static boolean checkUserEmail(String email) {
         try {
-            stat = Main.getStatement();
+            Statement stat = Main.getStatement();
             String command = "SELECT email FROM users WHERE email = '" + email + "';";
-            rs = stat.executeQuery(command);
+            ResultSet rs = stat.executeQuery(command);
             return rs.next();
         } catch (SQLException e) {
             System.out.println("SQLException: " + e.getMessage());
@@ -263,6 +291,15 @@ public class User {
             System.out.println("VendorError: " + e.getErrorCode());
         }
         return false;
+    }
+    /*
+    * Zwraca wydatek o konkretym indeksie w liscie wydatkow
+    * @return (1) obiekt reprezentujacy konkretny wydatek (2) null jezeli lista jest puista*/
+    public static Expense getExpense(int index){
+        if(expenseLinkedList != null){
+            return expenseLinkedList.get(index);
+        }
+        else return null;
     }
     //GETERY i SETERY
     public static String getName() { return name; }
@@ -288,6 +325,20 @@ public class User {
         }
         return out;
     }
+
+    /*
+    * Zwraca aktualna ilosc wydatkow uzytkownika
+    * @return rozmiar listy wydatkow
+    * */
+    public static int getExpenseCount(){
+        if(expenseLinkedList == null) return 0;
+        else return expenseLinkedList.size();
+    }
+
+    public static LinkedList<Expense> getExpenseLinkedList() {
+        return expenseLinkedList;
+    }
+
     @Override
     public String toString(){
         return this.getClass().getName() + " name: " + name + " email: " + email;

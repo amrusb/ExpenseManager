@@ -1,5 +1,3 @@
-import com.mysql.cj.log.Log;
-
 import javax.swing.*;
 
 public class MainMenuBar extends JMenuBar {
@@ -15,21 +13,24 @@ public class MainMenuBar extends JMenuBar {
     private static JDialog dialog = null;
     public MainMenuBar(MainFrame parent){
         //ACCOUNT BAR
-        accountMenu.add(createAccount);
         accountMenu.add(logIn);
+        accountMenu.add(createAccount);
         accountMenu.addSeparator();
         accountMenu.add(logOut);
         accountMenu.add(editAccount);
         accountMenu.addSeparator();
         accountMenu.add(exit);
-        //CREATE ACCOUNT
-        createAccount.addActionListener(e->{
-            dialog = new CreateAccountDialog(parent);
-            dialog.setVisible(true);
-        });
+
         //LOGIN
         logIn.addActionListener(e->{
+            if(dialog != null) dialog.setVisible(false);
             dialog = new LoggingDialog(parent);
+            dialog.setVisible(true);
+        });
+        //CREATE ACCOUNT
+        createAccount.addActionListener(e->{
+            if(dialog != null) dialog.setVisible(false);
+            dialog = new CreateAccountDialog(parent);
             dialog.setVisible(true);
         });
         //LOGOUT
@@ -39,13 +40,11 @@ public class MainMenuBar extends JMenuBar {
             JOptionPane.showConfirmDialog(this, message, "Potwierdzenie",
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.PLAIN_MESSAGE);
-            LoggingDialog.clear();
-            EditAccountDialog.clear();
-            CreateAccountDialog.clear();
             reload();
         });
         //EDIT ACCOUNT
         editAccount.addActionListener(e->{
+            if(dialog != null) dialog.setVisible(false);
             dialog = new EditAccountDialog(parent);
             dialog.setVisible(true);
         });
@@ -58,7 +57,18 @@ public class MainMenuBar extends JMenuBar {
         //EXPENSE BAR
         expenseMenu.add(addExpense);
         expenseMenu.add(editExpense);
-
+        //ADD EXPENSE
+        addExpense.addActionListener(e->{
+            if(dialog != null) dialog.setVisible(false);
+            dialog = new AddNewExpenseDialog(parent);
+            dialog.setVisible(true);
+        });
+        //EDIT EXPENSE
+        editExpense.addActionListener(e->{
+            if(dialog != null) dialog.setVisible(false);
+            dialog = new EditExpenseDialog(parent);
+            dialog.setVisible(true);
+        });
         add(accountMenu);
         add(expenseMenu);
     }
@@ -79,6 +89,12 @@ public class MainMenuBar extends JMenuBar {
             editAccount.setEnabled(false);
 
             expenseMenu.setEnabled(false);
+        }
+        if(User.getExpenseLinkedList() == null || User.getExpenseLinkedList().size() == 0){
+            editExpense.setEnabled(false);
+        }
+        else{
+            editExpense.setEnabled(true);
         }
     }
 }

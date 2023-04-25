@@ -20,7 +20,10 @@ public class MainFrame extends JFrame {
         add(new MainMenuBar(this), BorderLayout.NORTH);
         MainMenuBar.reload();
     }
-
+    /* Metoda zwraca szerokosc ekranu
+    *  @return int szerokosc ekranu*/
     public static int getScreenSizeWidth() {return SCREEN_SIZE_WIDTH;}
+    /* Metoda zwraca wysokosc ekranu
+     *  @return int wysokosc ekranu*/
     public static int getScreenSizeHeight() {return SCREEN_SIZE_HEIGHT;}
 }
