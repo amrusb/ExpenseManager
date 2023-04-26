@@ -46,3 +46,4 @@ GRANT ALL PRIVILEGES ON expense_manager_database.expenses TO 'databaseUser'@'loc
 REVOKE DROP ON expense_manager_database.expenses FROM 'databaseUser'@'localhost';
 GRANT SELECT ON expense_manager_database.expense_categories TO 'databaseUser'@'localhost';
 
+ALTER TABLE expenses CHANGE COLUMN `amount` `amount` DECIMAL(10,2) NOT NULL ;

@@ -2,17 +2,16 @@ import javax.swing.*;
 
 public class MainMenuBar extends JMenuBar {
     private static final JMenu accountMenu = new JMenu("Konto");
-    private static final JMenuItem createAccount = new JMenuItem("Utwórz");
-    private static final JMenuItem logIn = new JMenuItem("Zaloguj");
-    private static final JMenuItem logOut = new JMenuItem("Wyloguj");
-    private static final JMenuItem editAccount= new JMenuItem("Edytuj");
-    private static final JMenuItem exit = new JMenuItem("Wyjdź");
+    private static final JMenuItem createAccount = new JMenuItem("Utwórz", new ImageIcon("icons/create_account.png"));
+    private static final JMenuItem logIn = new JMenuItem("Zaloguj",new ImageIcon("icons/log_in.png"));
+    private static final JMenuItem logOut = new JMenuItem("Wyloguj", new ImageIcon("icons/log_out.png"));
+    private static final JMenuItem editAccount= new JMenuItem("Edytuj", new ImageIcon("icons/edit_account.png"));
+    private static final JMenuItem exit = new JMenuItem("Wyjdź", new ImageIcon("icons/exit.png"));
     private static final JMenu expenseMenu = new JMenu("Wydatek");
-    private static final JMenuItem addExpense = new JMenuItem("Dodaj");
-    private static final JMenuItem editExpense = new JMenuItem("Edytuj");
+    private static final JMenuItem addExpense = new JMenuItem("Dodaj", new ImageIcon("icons/add_expense.png"));
+    private static final JMenuItem editExpense = new JMenuItem("Edytuj", new ImageIcon("icons/edit_expense.png"));
     private static JDialog dialog = null;
-    public MainMenuBar(MainFrame parent){
-        //ACCOUNT BAR
+    public MainMenuBar(MainFrame parent){        //ACCOUNT BAR
         accountMenu.add(logIn);
         accountMenu.add(createAccount);
         accountMenu.addSeparator();
@@ -87,6 +86,7 @@ public class MainMenuBar extends JMenuBar {
             logIn.setEnabled(true);
             logOut.setEnabled(false);
             editAccount.setEnabled(false);
+
 
             expenseMenu.setEnabled(false);
         }

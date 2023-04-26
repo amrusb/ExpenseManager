@@ -18,6 +18,7 @@ public class MainFrame extends JFrame {
 
         setLayout(new BorderLayout());
         add(new MainMenuBar(this), BorderLayout.NORTH);
+        add(new MainPanel(), BorderLayout.CENTER);
         MainMenuBar.reload();
     }
     /* Metoda zwraca szerokosc ekranu
@@ -27,3 +28,5 @@ public class MainFrame extends JFrame {
      *  @return int wysokosc ekranu*/
     public static int getScreenSizeHeight() {return SCREEN_SIZE_HEIGHT;}
 }
+
+

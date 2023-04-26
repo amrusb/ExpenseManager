@@ -1,8 +1,11 @@
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.LinkedList;
+import java.util.Locale;
 
 enum Outcome {ERROR, ACCOUNT_DELETED, ACCOUNT_CREATED, ACCOUNT_EDITED, ACCESS_GRANTED, ACCESS_DENIED,  INVALID_USERNAME, USER_NAME_USED, INVALID_PASSWORD, EMAIL_USED}
 public class User {
@@ -49,9 +52,7 @@ public class User {
             }
             else return Outcome.INVALID_USERNAME;
         } catch(SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
+            System.out.println(e.getMessage());
         }
         return Outcome.ACCESS_DENIED;
     }
@@ -99,9 +100,7 @@ public class User {
                 expenseLinkedList.add(newExpense);
             }
         }catch(SQLException e){
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
+            throw new RuntimeException(e.getMessage());
         }
     }
     /*
@@ -113,6 +112,7 @@ public class User {
         AddNewExpenseDialog.clear();
         LoggingDialog.clear();
         CreateAccountDialog.clear();
+        MainPanel.reload();
     }
     /*
      * Tworzy nowe rekord tabeli persons i wstawia go do bazy danych
@@ -138,9 +138,7 @@ public class User {
                         return Outcome.ACCOUNT_CREATED;
                     else return Outcome.ERROR;
                 }catch(SQLException e){
-                    System.out.println("SQLException: " + e.getMessage());
-                    System.out.println("SQLState: " + e.getSQLState());
-                    System.out.println("VendorError: " + e.getErrorCode());
+                    throw new RuntimeException(e.getMessage());
                 }
             }
             else return Outcome.EMAIL_USED;
@@ -184,9 +182,7 @@ public class User {
             }
             else return Outcome.ERROR;
         }catch(SQLException e){
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
+            System.out.println(e.getMessage());
         }
         return Outcome.ERROR;
     }
@@ -208,9 +204,7 @@ public class User {
                 return Outcome.ACCOUNT_DELETED;
             else return Outcome.ERROR;
         }catch(SQLException e){
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
+            System.out.println(e.getMessage());
         }
         return Outcome.ERROR;
     }
@@ -227,9 +221,7 @@ public class User {
             ResultSet rs = stat.executeQuery(command);
             return rs.next();
         }catch(SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
+            System.out.println(e.getMessage());
         }
         return false;
     }
@@ -247,9 +239,7 @@ public class User {
             ResultSet rs = stat.executeQuery(command);
             return rs.next();
         }catch(SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
+            System.out.println(e.getMessage());
         }
         return false;
     }
@@ -266,9 +256,7 @@ public class User {
             ResultSet rs = stat.executeQuery(command);
             return rs.next();
         } catch (SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
+            System.out.println(e.getMessage());
         }
         return false;
     }
@@ -286,9 +274,7 @@ public class User {
             ResultSet rs = stat.executeQuery(command);
             return rs.next();
         } catch (SQLException e) {
-            System.out.println("SQLException: " + e.getMessage());
-            System.out.println("SQLState: " + e.getSQLState());
-            System.out.println("VendorError: " + e.getErrorCode());
+            System.out.println(e.getMessage());
         }
         return false;
     }
@@ -300,6 +286,84 @@ public class User {
             return expenseLinkedList.get(index);
         }
         else return null;
+    }
+    /*
+    * Zwraca srednia wydatków danego uzytkownika obliczona w bazie danych
+    * @return double srenia wydatkow uzytkownika*/
+    public static double getAverageExpense(){
+        Statement stat = Main.getStatement();
+        String select = "SELECT AVG(e.amount) FROM expenses e JOIN users u USING(user_id) \n" +
+                "WHERE user_id = \n" +
+                "(SELECT user_id FROM users WHERE name = '"+name+"')\n" +
+                "GROUP BY user_id ;";
+        ResultSet rs;
+        double avg = 0.0;
+        try{
+            rs =stat.executeQuery(select);
+            if(rs.next()) avg = rs.getDouble(1);
+        }
+        catch (SQLException e){
+            throw new RuntimeException(e.getMessage());
+        }
+        return avg;
+    }
+    /*
+    * */
+    public static double getMonthAverageExp(){
+        Statement stat = Main.getStatement();
+
+        ResultSet rs;
+        LocalDate currentDate = LocalDate.now();
+        String monthStart = currentDate.getYear() + "-" + currentDate.getMonthValue() + "-01";
+        String monthEnd;
+        if(currentDate.getMonth() == Month.DECEMBER) currentDate = currentDate.plusYears(1);
+        currentDate = currentDate.plusMonths(1);
+        monthEnd = currentDate.getYear() + "-" + currentDate.getMonthValue() + "-01";
+
+        String select = "SELECT AVG(amount) FROM expenses e JOIN users u USING(user_id)\n" +
+                "WHERE user_id = (SELECT user_id FROM users WHERE name = '"+name+"') \n" +
+                "AND expense_date BETWEEN '"+monthStart+"' AND '"+monthEnd+"' AND expense_date != '"+monthEnd+"'\n" +
+                "GROUP BY user_id\n" +
+                "ORDER BY SUM(amount) DESC;";
+
+        double avg = 0.0;
+        try{
+            rs =stat.executeQuery(select);
+            if(rs.next()) avg= rs.getDouble(1);
+        }
+        catch (SQLException e){
+            throw new RuntimeException(e.getMessage());
+        }
+        return avg;
+    }
+    /*
+    * */
+    public static String getMonthCategory(){
+        Statement stat = Main.getStatement();
+
+        ResultSet rs;
+        LocalDate currentDate = LocalDate.now();
+        String monthStart = currentDate.getYear() + "-" + currentDate.getMonthValue() + "-01";
+        String monthEnd;
+        if(currentDate.getMonth() == Month.DECEMBER) currentDate = currentDate.plusYears(1);
+        currentDate = currentDate.plusMonths(1);
+        monthEnd = currentDate.getYear() + "-" + currentDate.getMonthValue() + "-01";
+
+        String select = "SELECT c.name, SUM(amount) FROM expenses e JOIN users u USING(user_id) JOIN expense_categories c USING (category_id)\n" +
+                "WHERE user_id = (SELECT user_id FROM users WHERE name = '"+name+"') \n" +
+                "AND expense_date BETWEEN '"+monthStart+"' AND '"+monthEnd+"' AND expense_date != '"+monthEnd+"'\n" +
+                "GROUP BY category_id\n" +
+                "ORDER BY SUM(amount) DESC;";
+
+        String category = "Brak";
+        try{
+            rs =stat.executeQuery(select);
+            if(rs.next()) category = rs.getString("name");
+        }
+        catch (SQLException e){
+            throw new RuntimeException(e.getMessage());
+        }
+        return category;
     }
     //GETERY i SETERY
     public static String getName() { return name; }

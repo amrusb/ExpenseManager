@@ -65,6 +65,7 @@ class LoggingDialog extends JDialog {
                 case ACCESS_GRANTED -> {
                     Main.setLoggedUser(user);
                     MainMenuBar.reload();
+                    MainPanel.reload();
                     setVisible(false);
                 }
                 default -> {
@@ -275,6 +276,7 @@ class EditAccountDialog extends JDialog{
                     case ACCOUNT_DELETED -> {
                         Main.getLoggedUser().logOut();
                         MainMenuBar.reload();
+                        MainPanel.reload();
 
                         message = "Konto zostało usunięte";
                         JOptionPane.showConfirmDialog(this, message, "Potwierdzenie",
@@ -382,6 +384,8 @@ class AddNewExpenseDialog extends JDialog{
                     userExpenseCounter++;
                     clear();
                     MainMenuBar.reload();
+                    MainPanel.reload();
+
                     setVisible(false);
                 }
             }
@@ -568,6 +572,8 @@ class EditExpenseDialog extends JDialog{
                 JOptionPane.showConfirmDialog(this, message, "Potwierdzenie",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE);
+                MainMenuBar.reload();
+                MainPanel.reload();
             }
         });
         buttonsPanel.add(deleteButton);
@@ -584,6 +590,7 @@ class EditExpenseDialog extends JDialog{
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.INFORMATION_MESSAGE);
                     MainMenuBar.reload();
+                    MainPanel.reload();
                     clear();
                     setVisible(false);
                     }
