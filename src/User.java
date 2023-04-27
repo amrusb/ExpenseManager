@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.Arrays;
 import java.util.LinkedList;
-import java.util.Locale;
 
 enum Outcome {ERROR, ACCOUNT_DELETED, ACCOUNT_CREATED, ACCOUNT_EDITED, ACCESS_GRANTED, ACCESS_DENIED,  INVALID_USERNAME, USER_NAME_USED, INVALID_PASSWORD, EMAIL_USED}
 public class User {

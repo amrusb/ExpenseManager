@@ -7,6 +7,9 @@ public class MainFrame extends JFrame {
     private static final int DEFAULT_WIDTH = 2 * 1920 / 3;
     private static final int DEFAULT_HEIGHT = 2 *1080 / 3;
     private static final String PROGRAM_NAME = "Expense Manager";
+    private static final Font HEADER_FONT = new Font("SansSerif", Font.BOLD, 20);
+    private static final Font HEADER_2_FONT = new Font("SansSerif", Font.BOLD, 13);
+    private static final Font BASIC_FONT = new Font("SansSerif", Font.PLAIN, 13);
 
     public MainFrame(){
         setTitle(PROGRAM_NAME);
@@ -15,7 +18,9 @@ public class MainFrame extends JFrame {
         int y = (SCREEN_SIZE_HEIGHT - DEFAULT_HEIGHT) / 2;
         setLocation(x, y);
         setResizable(false);
-
+        ImageIcon icon = new ImageIcon("icons/main_icon.png");
+        setIconImage(icon.getImage());
+        setBackground(new Color(64, 64, 64));
         setLayout(new BorderLayout());
         add(new MainMenuBar(this), BorderLayout.NORTH);
         add(new MainPanel(), BorderLayout.CENTER);
@@ -27,6 +32,11 @@ public class MainFrame extends JFrame {
     /* Metoda zwraca wysokosc ekranu
      *  @return int wysokosc ekranu*/
     public static int getScreenSizeHeight() {return SCREEN_SIZE_HEIGHT;}
+    public static Font getHeaderFont(){return HEADER_FONT; }
+
+    public static Font getHeader2Font() {return HEADER_2_FONT;}
+
+    public static Font getBasicFont() {return BASIC_FONT;}
 }
 
 

@@ -15,13 +15,15 @@ import java.util.LinkedList;
 /*
 * Klasa reprezentuje okno dialogowe sluzace do logowania do programu*/
 class LoggingDialog extends JDialog {
-    private static final int DEFAULT_WIDTH = 320;
+    private static final int DEFAULT_WIDTH = 350;
     private static final int DEFAULT_HEIGHT = 150;
     private static final JTextField usernameField = new JTextField("");
     private static final JPasswordField passwordField = new JPasswordField("");
+    private static final Color MAIN_COLOR = new Color(246, 246, 246);
     public LoggingDialog(MainFrame owner) {
         super(owner, "Zaloguj");
         setLayout(new BorderLayout());
+        setBackground(MAIN_COLOR);
 
         int scrn_w = MainFrame.getScreenSizeWidth();
         int scrn_h = MainFrame.getScreenSizeHeight();
@@ -29,12 +31,22 @@ class LoggingDialog extends JDialog {
         setResizable(false);
 
         var loggingPanel = new JPanel();
-        loggingPanel.setLayout(new GridLayout(2, 2));
+        var layout = new GridLayout(2, 2);
+        layout.setVgap(10);
+        layout.setHgap(10);
+        loggingPanel.setLayout(layout);
 
-        loggingPanel.add(new JLabel("Nazwa użytkownika:"));
+        var userNameLabel = new JLabel("Nazwa użytkownika:");
+        userNameLabel.setFont(MainFrame.getHeader2Font());
+        userNameLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        loggingPanel.add(userNameLabel);
         loggingPanel.add(usernameField);
 
-        loggingPanel.add(new JLabel("Hasło:"));
+        var passwordLabel = new JLabel("Hasło:");
+        passwordLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        passwordLabel.setFont(MainFrame.getHeader2Font());
+        loggingPanel.add(passwordLabel);
+
         loggingPanel.add(passwordField);
 
         add(loggingPanel, BorderLayout.CENTER);
@@ -95,8 +107,8 @@ class LoggingDialog extends JDialog {
 * Klasa reprezentuje okno dialogowe sluzace do tworzenia konta
 * */
 class CreateAccountDialog extends JDialog {
-    private static final int DEFAULT_WIDTH = 320;
-    private static final int DEFAULT_HEIGHT = 200;
+    private static final int DEFAULT_WIDTH = 350;
+    private static final int DEFAULT_HEIGHT = 220;
     private static final JTextField userNameField = new JTextField();
     private static final JTextField emailField = new JTextField();
     private static final JPasswordField passwordField = new JPasswordField();
@@ -112,14 +124,33 @@ class CreateAccountDialog extends JDialog {
         setResizable(false);
 
         var createAccountPanel = new JPanel();
-        createAccountPanel.setLayout(new GridLayout(4, 2));
-        createAccountPanel.add(new JLabel("Nazwa użytkownika:"));
+        var layout = new GridLayout(4,2);
+        createAccountPanel.setLayout(layout);
+        layout.setVgap(10);
+        layout.setHgap(10);
+
+        var userNameLabel = new JLabel("Nazwa użytkownika:");
+        userNameLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        userNameLabel.setFont(MainFrame.getHeader2Font());
+        createAccountPanel.add(userNameLabel);
         createAccountPanel.add(userNameField );
-        createAccountPanel.add(new JLabel("Adres e-mail:"));
+
+        var emailLabel = new JLabel("Adres e-mail:");
+        emailLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        emailLabel.setFont(MainFrame.getHeader2Font());
+        createAccountPanel.add(emailLabel);
         createAccountPanel.add(emailField);
-        createAccountPanel.add(new JLabel("Hasło:"));
+
+        var passwordLabel = new JLabel("Hasło:");
+        passwordLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        passwordLabel.setFont(MainFrame.getHeader2Font());
+        createAccountPanel.add(passwordLabel);
         createAccountPanel.add(passwordField);
-        createAccountPanel.add(new JLabel("Powtórz hasło:"));
+
+        var repeatPasswordLabel = new JLabel("Powtórz hasło:");
+        repeatPasswordLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        repeatPasswordLabel.setFont(MainFrame.getHeader2Font());
+        createAccountPanel.add(repeatPasswordLabel);
         createAccountPanel.add(repeatPasswordField);
 
         add(createAccountPanel, BorderLayout.CENTER);
@@ -195,14 +226,16 @@ class CreateAccountDialog extends JDialog {
  * Klasa reprezentuje okno dialogowe sluzace do edytowania danych konta uzytkownika
  * */
 class EditAccountDialog extends JDialog{
-    private static final int DEFAULT_WIDTH = 320;
+    private static final int DEFAULT_WIDTH = 350;
     private static final int DEFAULT_HEIGHT = 200;
     private static final JTextField userNameField = new JTextField();
     private static final JTextField emailField = new JTextField();
     private static final JPasswordField passwordField = new JPasswordField();
+    private static final Color MAIN_COLOR = new Color(246, 246, 246);
     public EditAccountDialog(MainFrame owner){
         super(owner, "Edytuj konto");
         setLayout(new BorderLayout());
+        setBackground(MAIN_COLOR);
         int scrn_w = MainFrame.getScreenSizeWidth();
         int scrn_h = MainFrame.getScreenSizeHeight();
         setBounds((scrn_w  - DEFAULT_WIDTH) / 2, (scrn_h - DEFAULT_HEIGHT) / 2, DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -210,14 +243,32 @@ class EditAccountDialog extends JDialog{
         setLayout(new BorderLayout());
 
         var editPanel = new JPanel();
-        editPanel.setLayout(new GridLayout(4, 2));
-        editPanel.add(new JLabel("Nazwa użytkownika"));
+        var layout = new GridLayout(3,2);
+        layout.setVgap(10);
+        layout.setHgap(10);
+        editPanel.setLayout(layout);
+
+        var userNameLabel = new JLabel("Nazwa użytkownika:");
+        userNameLabel.setFont(MainFrame.getHeader2Font());
+        userNameLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        editPanel.add(userNameLabel);
+
         userNameField.setText(User.getName());
         editPanel.add(userNameField);
-        editPanel.add(new JLabel("Adres e-mail"));
+
+        var emailLabel = new JLabel("Adres e-mail:");
+        emailLabel.setFont(MainFrame.getHeader2Font());
+        emailLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        editPanel.add(emailLabel);
+
         emailField.setText(User.getEmail());
         editPanel.add(emailField);
-        editPanel.add(new JLabel("Hasło"));
+
+        var passwordLabel = new JLabel("Hasło:");
+        passwordLabel.setFont(MainFrame.getHeader2Font());
+        passwordLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        editPanel.add( passwordLabel);
+
         passwordField.setText(User.getStringPassword());
         editPanel.add(passwordField);
 
@@ -314,8 +365,8 @@ class EditAccountDialog extends JDialog{
  * przez uzytkownika
  * */
 class AddNewExpenseDialog extends JDialog{
-    private static final int DEFAULT_WIDTH = 320;
-    private static final int DEFAULT_HEIGHT = 200;
+    private static final int DEFAULT_WIDTH = 350;
+    private static final int DEFAULT_HEIGHT = 220;
     private static int userExpenseCounter = User.getExpenseCount();
     private static String DEFAULT_NAME;
     private static final JTextField expenseNameField = new JTextField();
@@ -331,17 +382,29 @@ class AddNewExpenseDialog extends JDialog{
         setBounds((scrn_w - DEFAULT_WIDTH )/ 2, (scrn_h - DEFAULT_HEIGHT )/ 2, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 
         var addExpensePanel = new JPanel();
-        addExpensePanel.setLayout(new GridLayout(4,2));
-        addExpensePanel.add(new JLabel("Nazwa wydatku:"));
+        var layout = new GridLayout(4, 2);
+        layout.setVgap(10);
+        layout.setHgap(10);
+        addExpensePanel.setLayout(layout);
+        var expenseNameLabel = new JLabel("Nazwa wydatku:");
+        expenseNameLabel.setFont(MainFrame.getHeader2Font());
+        expenseNameLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        addExpensePanel.add(expenseNameLabel);
         setDefaultName();
         expenseNameField.setText(DEFAULT_NAME);
         addExpensePanel.add(expenseNameField);
 
-        addExpensePanel.add(new JLabel("Kwota:"));
+        var amountLabel = new JLabel("Kwota:");
+        amountLabel.setFont(MainFrame.getHeader2Font());
+        amountLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        addExpensePanel.add(amountLabel);
         amountField.setText("0,00");
         addExpensePanel.add(amountField);
 
-        addExpensePanel.add(new JLabel("Data:"));
+        var dateLabel = new JLabel("Data:");
+        dateLabel.setFont(MainFrame.getHeader2Font());
+        dateLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        addExpensePanel.add(dateLabel);
         MaskFormatter dataMaskFormatter = null;
         try{
             dataMaskFormatter = new MaskFormatter("####-##-##");
@@ -356,7 +419,10 @@ class AddNewExpenseDialog extends JDialog{
         dateField.setText(dtf.format(now));
         addExpensePanel.add(dateField);
 
-        addExpensePanel.add(new JLabel("Kategoria:"));
+        var categoryLabel = new JLabel("Kategoria:");
+        categoryLabel.setFont(MainFrame.getHeader2Font());
+        categoryLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        addExpensePanel.add(categoryLabel);
         fillCategoriesBox();
         addExpensePanel.add(categoryComboBox);
 
@@ -473,7 +539,6 @@ class AddNewExpenseDialog extends JDialog{
         LocalDate enteredDate;
         try {
             enteredDate = LocalDate.parse(date);
-            System.out.println(enteredDate.toString());
         }
         catch (DateTimeParseException e){
             String message = "Niepoprawny format daty.";
@@ -513,27 +578,39 @@ class EditExpenseDialog extends JDialog{
 
         clear();
         currentExpense = User.getExpense(0);
-        var chooseExpensePanel = new JPanel();
-        chooseExpensePanel.setLayout(new GridLayout(1, 2));
-        chooseExpensePanel.add(new JLabel("Wybierz wydatek:"));
-        chooseExpensePanel.add(expenseNameComboBox);
         fillExpenseNameBox(User.getExpenseLinkedList());
         expenseNameComboBox.addActionListener(e->{
             int index = expenseNameComboBox.getSelectedIndex();
             currentExpense = User.getExpense(index);
             reload();
         });
-        add(chooseExpensePanel, BorderLayout.NORTH);
-        var editPanel = new JPanel();
-        editPanel.setLayout(new GridLayout(4, 2));
+        expenseNameComboBox.setBorder(BorderFactory.createTitledBorder("Wybierz wydatek"));
+        add(expenseNameComboBox, BorderLayout.NORTH);
 
-        editPanel.add(new JLabel("Nazwa wydatku:"));
+        var editPanel = new JPanel();
+
+        var layout = new GridLayout(4, 2);
+        editPanel.setLayout(layout);
+        layout.setVgap(10);
+        layout.setHgap(10);
+        editPanel.setLayout(layout);
+
+        var expenseNameLabel = new JLabel("Nazwa wydatku:");
+        expenseNameLabel.setFont(MainFrame.getHeader2Font());
+        expenseNameLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        editPanel.add(expenseNameLabel);
         editPanel.add(expenseNameField);
 
-        editPanel.add(new JLabel("Kwota:"));
+        var amountLabel = new JLabel("Kwota:");
+        amountLabel.setFont(MainFrame.getHeader2Font());
+        amountLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        editPanel.add(amountLabel);
         editPanel.add(amountField);
 
-        editPanel.add(new JLabel("Data:"));
+        var dateLabel = new JLabel("Data:");
+        dateLabel.setFont(MainFrame.getHeader2Font());
+        dateLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        editPanel.add(dateLabel);
         MaskFormatter dataMaskFormatter = null;
         try{
             dataMaskFormatter = new MaskFormatter("####-##-##");
@@ -548,7 +625,10 @@ class EditExpenseDialog extends JDialog{
         dateField.setText(dtf.format(now));
         editPanel.add(dateField);
 
-        editPanel.add(new JLabel("Kategoria:"));
+        var categoryLabel = new JLabel("Kategoria:");
+        categoryLabel.setFont(MainFrame.getHeader2Font());
+        categoryLabel.setBorder(BorderFactory.createEmptyBorder(5, 20, 5, 0));
+        editPanel.add(categoryLabel);
         fillCategoriesBox();
         editPanel.add(categoryComboBox);
         reload();

@@ -1,4 +1,6 @@
 import javax.swing.*;
+import java.awt.*;
+
 
 public class MainMenuBar extends JMenuBar {
     private static final JMenu accountMenu = new JMenu("Konto");
@@ -12,6 +14,8 @@ public class MainMenuBar extends JMenuBar {
     private static final JMenuItem editExpense = new JMenuItem("Edytuj", new ImageIcon("icons/edit_expense.png"));
     private static JDialog dialog = null;
     public MainMenuBar(MainFrame parent){        //ACCOUNT BAR
+        setBorder(BorderFactory.createEmptyBorder());
+        setPreferredSize(new Dimension(MainFrame.getScreenSizeWidth(), 30));
         accountMenu.add(logIn);
         accountMenu.add(createAccount);
         accountMenu.addSeparator();
@@ -19,6 +23,13 @@ public class MainMenuBar extends JMenuBar {
         accountMenu.add(editAccount);
         accountMenu.addSeparator();
         accountMenu.add(exit);
+
+        accountMenu.setFont(MainFrame.getBasicFont());
+        createAccount.setFont(MainFrame.getBasicFont());
+        logIn.setFont(MainFrame.getBasicFont());
+        logOut.setFont(MainFrame.getBasicFont());
+        editAccount.setFont(MainFrame.getBasicFont());
+        exit.setFont(MainFrame.getBasicFont());
 
         //LOGIN
         logIn.addActionListener(e->{
@@ -56,6 +67,10 @@ public class MainMenuBar extends JMenuBar {
         //EXPENSE BAR
         expenseMenu.add(addExpense);
         expenseMenu.add(editExpense);
+
+        expenseMenu.setFont(MainFrame.getBasicFont());
+        addExpense.setFont(MainFrame.getBasicFont());
+        editExpense.setFont(MainFrame.getBasicFont());
         //ADD EXPENSE
         addExpense.addActionListener(e->{
             if(dialog != null) dialog.setVisible(false);
@@ -90,11 +105,6 @@ public class MainMenuBar extends JMenuBar {
 
             expenseMenu.setEnabled(false);
         }
-        if(User.getExpenseLinkedList() == null || User.getExpenseLinkedList().size() == 0){
-            editExpense.setEnabled(false);
-        }
-        else{
-            editExpense.setEnabled(true);
-        }
+        editExpense.setEnabled(User.getExpenseLinkedList() != null && User.getExpenseLinkedList().size() != 0);
     }
 }
