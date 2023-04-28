@@ -8,7 +8,9 @@ import java.sql.Statement;
 * double amount - wydana kwota
 * String category - kategoria wydatku
 * String date - data wydatku w formacie yyyy-MM-dd
-* int expense_id unikalny identyfikator wydatku*/
+* int expense_id unikalny identyfikator wydatku
+* Posiada metody, które pozwalają na dodawanie, usuwanie oraz edycję
+* konkretnego wydatku w bazie danych*/
 public class Expense {
         private String name;
         private double amount;

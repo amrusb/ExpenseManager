@@ -4,6 +4,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/*
+ * Jest to program umozliwiajacy zarzadzanie wydatkami uzytkownika,
+* korzystajac z odpowiedniej bazy danych
+* @version 1.0 2023-04-28
+* @author Bartosz Surma*/
 
 public class Main {
     private static final MainFrame frame = new MainFrame();
@@ -16,6 +21,9 @@ public class Main {
             frame.setVisible(true);
         });
     }
+    /*
+    * Zwraca obiekt sluzacy do tworzenia zapytan do bazy danych w jezyku SQL
+    * @return Statement stat obiekt sluzacy do tworzenia zapytan do bazy danych*/
     public static Statement getStatement(){
         Statement stat;
         try {
@@ -25,6 +33,8 @@ public class Main {
         }
         return stat;
     }
+    /*
+    * Zamykaa polaczenie z baza danych*/
     public static void closeConnection(){
         try{
             if(!conn.isClosed()){
@@ -39,5 +49,7 @@ public class Main {
     }
     public static void setLoggedUser(User user){loggedUser = user;}
     public static User getLoggedUser(){ return loggedUser; }
+    /*Zwraca wartosc logiczna zalezna od tego czy uzytkownik jest zalogowany
+    * @return (1) boolean true gdy uzytkownik jest zalogowany, (2) boolean false w przeciwnym wypadkuy*/
     public static boolean isLogged(){return loggedUser != null; }
 }

@@ -6,7 +6,15 @@ import java.time.Month;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-enum Outcome {ERROR, ACCOUNT_DELETED, ACCOUNT_CREATED, ACCOUNT_EDITED, ACCESS_GRANTED, ACCESS_DENIED,  INVALID_USERNAME, USER_NAME_USED, INVALID_PASSWORD, EMAIL_USED}
+enum Outcome {ERROR, ACCOUNT_DELETED, ACCOUNT_CREATED, ACCOUNT_EDITED, ACCESS_GRANTED, ACCESS_DENIED,  INVALID_USERNAME, USER_NAME_USED, INVALID_PASSWORD, EMAIL_USED, EMAIL_INCORRECT, EMAIL_CORRECT}
+/*
+* Klasa reprezentuje konkretnego uzytkownika aplikacji
+* posiada pola:
+*       String name - nazwa uzytkownika
+*       char[] password - haslo uzytkownika
+*       String email - adres email uzytkownika
+*       LinkedList<Expense> expenseLinkedList - lista wydatkow uzytkownika
+* posiada metody, ktore umozliwiaja zarzadzenie kontem uzytkownika.*/
 public class User {
     private static String name;
     private static char[] password;
@@ -242,6 +250,20 @@ public class User {
         }
         return false;
     }
+    public static Outcome verifyEmail(){
+        String domain = "";
+
+        for (int i = 0; i < email.length(); i++) {
+            if(email.charAt(i) == '@'){
+                for (int j = i+1; j < email.length(); j++) {
+                    domain += email.charAt(j);
+                }
+                if(domain.contains(".") && domain.charAt(0) != '.') return Outcome.EMAIL_CORRECT;
+                else return Outcome.EMAIL_INCORRECT;
+            }
+        }
+        return Outcome.EMAIL_INCORRECT;
+    }
     /*
      * Sprawdza czy uzytkownik o danym adresie e-mail jest juz w bazie danych
      * @param conn obiekt przechowujacy polaczenie z baza danych
@@ -307,7 +329,8 @@ public class User {
         return avg;
     }
     /*
-    * */
+    * Zwraca srednia wydatkow danego uzytkownika w bierzacym miesiacu, obliczona w bazie danych
+    * @return double srednia wydatkow uzytkownika w bierzacym miesiacu*/
     public static double getMonthAverageExp(){
         Statement stat = Main.getStatement();
 
@@ -336,7 +359,8 @@ public class User {
         return avg;
     }
     /*
-    * */
+    * Zwraca nazwe kategorii, w ktorej uzytkownik zrobil najwiecej wydatkow w danym miesiacu
+    * @return String naza kategorii pobrana z bazy danych*/
     public static String getMonthCategory(){
         Statement stat = Main.getStatement();
 
@@ -377,6 +401,9 @@ public class User {
         return password;
     }
     public static void setPassword(char[] newPassword){password = newPassword;}
+    public static LinkedList<Expense> getExpenseLinkedList() {
+        return expenseLinkedList;
+    }
     /*
      * Zwraca haslo uzytkownika w typie String
      * @return haslo uzytkownika
@@ -388,7 +415,6 @@ public class User {
         }
         return out;
     }
-
     /*
     * Zwraca aktualna ilosc wydatkow uzytkownika
     * @return rozmiar listy wydatkow
@@ -396,10 +422,6 @@ public class User {
     public static int getExpenseCount(){
         if(expenseLinkedList == null) return 0;
         else return expenseLinkedList.size();
-    }
-
-    public static LinkedList<Expense> getExpenseLinkedList() {
-        return expenseLinkedList;
     }
 
     @Override

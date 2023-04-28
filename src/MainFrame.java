@@ -1,6 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
 
+/*
+* */
 public class MainFrame extends JFrame {
     private static final int SCREEN_SIZE_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
     private static final int SCREEN_SIZE_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;

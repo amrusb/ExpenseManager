@@ -163,27 +163,44 @@ class CreateAccountDialog extends JDialog {
                         passwordField.getPassword(),
                         emailField.getText());
                 String message;
-                switch (newUser.createAccount()) {
-                    case USER_NAME_USED -> {
-                        message = "Nazwa użytkownika została już użyta";
+                switch(newUser.verifyEmail()){
+                    case EMAIL_INCORRECT -> {
+                        message = "Błędy adres e-mail";
                         JOptionPane.showConfirmDialog(this, message, "Błąd",
                                 JOptionPane.DEFAULT_OPTION,
                                 JOptionPane.ERROR_MESSAGE);
                     }
-                    case EMAIL_USED -> {
-                        message = "Adres e-mail został już użyty";
-                        JOptionPane.showConfirmDialog(this, message, "Błąd",
-                                JOptionPane.DEFAULT_OPTION,
-                                JOptionPane.ERROR_MESSAGE);
+                    case EMAIL_CORRECT -> {
+                        switch (newUser.createAccount()) {
+                            case USER_NAME_USED -> {
+                                message = "Nazwa użytkownika została już użyta";
+                                JOptionPane.showConfirmDialog(this, message, "Błąd",
+                                        JOptionPane.DEFAULT_OPTION,
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+                            case EMAIL_USED -> {
+                                message = "Adres e-mail został już użyty";
+                                JOptionPane.showConfirmDialog(this, message, "Błąd",
+                                        JOptionPane.DEFAULT_OPTION,
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+                            case ACCOUNT_CREATED -> {
+                                message = "Konto utworzono pomyślnie\nZaloguj się, aby kontynuować.";
+                                JOptionPane.showConfirmDialog(this, message, "Potwierdzenie",
+                                        JOptionPane.DEFAULT_OPTION,
+                                        JOptionPane.PLAIN_MESSAGE);
+                                clear();
+                                setVisible(false);
+                            }
+                            default -> {
+                                message = "Wystąpił nieoczekiwany błąd";
+                                JOptionPane.showConfirmDialog(this, message, "Błąd",
+                                        JOptionPane.DEFAULT_OPTION,
+                                        JOptionPane.ERROR_MESSAGE);
+                            }
+                        }
                     }
-                    case ACCOUNT_CREATED -> {
-                        message = "Konto utworzono pomyślnie\nZaloguj się, aby kontynuować.";
-                        JOptionPane.showConfirmDialog(this, message, "Potwierdzenie",
-                                JOptionPane.DEFAULT_OPTION,
-                                JOptionPane.PLAIN_MESSAGE);
-                        setVisible(false);
-                    }
-                    default -> {
+                    default->{
                         message = "Wystąpił nieoczekiwany błąd";
                         JOptionPane.showConfirmDialog(this, message, "Błąd",
                                 JOptionPane.DEFAULT_OPTION,
@@ -208,8 +225,6 @@ class CreateAccountDialog extends JDialog {
         buttonPanel.add(createButton);
         buttonPanel.add(cancelButton);
         add(buttonPanel, BorderLayout.SOUTH);
-
-
     }
     /*
      * Usuwa wartosci z pola usernameField, emailField, passwordField i repeatPasswordField
@@ -277,37 +292,53 @@ class EditAccountDialog extends JDialog{
         var buttonsPanel = new JPanel();
         var acceptButton = new JButton("Zatwierdź");
         acceptButton.addActionListener(e->{
-            switch(User.editAccount(
-                    userNameField.getText(),
-                    passwordField.getPassword(),
-                    emailField.getText())){
-                case USER_NAME_USED -> {
-                    String message = "Konto o takiej nazwie już istnieje. Wprowadź inny.";
+            switch (User.verifyEmail()){
+                case EMAIL_INCORRECT -> {
+                    String message = "Błędy adres e-mail";
                     JOptionPane.showConfirmDialog(this, message, "Błąd",
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.ERROR_MESSAGE);
+                }
+                case EMAIL_CORRECT -> {
+                    switch(User.editAccount(
+                            userNameField.getText(),
+                            passwordField.getPassword(),
+                            emailField.getText())){
+                        case USER_NAME_USED -> {
+                            String message = "Konto o takiej nazwie już istnieje. Wprowadź inny.";
+                            JOptionPane.showConfirmDialog(this, message, "Błąd",
+                                    JOptionPane.DEFAULT_OPTION,
+                                    JOptionPane.ERROR_MESSAGE);
 
-                }
-                case EMAIL_USED -> {
-                    String message = "Konto o takim adresie e-mail już istnieje. Wprowadź inny.";
-                    JOptionPane.showConfirmDialog(this, message, "Błąd",
-                            JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.ERROR_MESSAGE);
+                        }
+                        case EMAIL_USED -> {
+                            String message = "Konto o takim adresie e-mail już istnieje. Wprowadź inny.";
+                            JOptionPane.showConfirmDialog(this, message, "Błąd",
+                                    JOptionPane.DEFAULT_OPTION,
+                                    JOptionPane.ERROR_MESSAGE);
 
+                        }
+                        case ACCOUNT_EDITED -> {
+                            String message = "Zmiany zostały wprowadzone";
+                            JOptionPane.showConfirmDialog(this, message, "Potwierdzenie",
+                                    JOptionPane.DEFAULT_OPTION,
+                                    JOptionPane.INFORMATION_MESSAGE);
+                            setVisible(false);
+                        }
+                        case ERROR -> {
+                            String message = "Wystąpił nieoczekiwany błąd";
+                            JOptionPane.showConfirmDialog(this, message, "Błąd",
+                                    JOptionPane.DEFAULT_OPTION,
+                                    JOptionPane.ERROR_MESSAGE);
+
+                        }
+                    }
                 }
-                case ACCOUNT_EDITED -> {
-                    String message = "Zmiany zostały wprowadzone";
-                    JOptionPane.showConfirmDialog(this, message, "Potwierdzenie",
-                            JOptionPane.DEFAULT_OPTION,
-                            JOptionPane.INFORMATION_MESSAGE);
-                    setVisible(false);
-                }
-                case ERROR -> {
+                default -> {
                     String message = "Wystąpił nieoczekiwany błąd";
                     JOptionPane.showConfirmDialog(this, message, "Błąd",
                             JOptionPane.DEFAULT_OPTION,
                             JOptionPane.ERROR_MESSAGE);
-
                 }
             }
         });

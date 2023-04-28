@@ -9,6 +9,9 @@ import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 
+/*
+* Klasa reprezentuje główny panel aplikacji.
+* Zawiera dwa panele: ExpensePanel oraz InfoPanel*/
 public class MainPanel extends JPanel {
     public MainPanel(){
         var GBlayout = new GridBagLayout();
@@ -42,11 +45,16 @@ public class MainPanel extends JPanel {
         add(infoPanel, con);
 
     }
+    /*
+    * Ustawia na nowo wartosci pol w panelach InfoPanel oraz ExpensePanel*/
     public static void reload(){
         InfoPanel.reload();
         ExpensePanel.reload();
     }
 }
+/*
+* Klasa reprezentuje panel wyświetlany w panelu głównym,
+* zawierający informacje o zalogowanym użytkowniku*/
 class InfoPanel extends JPanel{
     private static final JTextField userName = new JTextField("Zaloguj się, aby korzytać z aplikacji");
     private static final JFormattedTextField  averageExpense = new JFormattedTextField(new NumberFormatter(new DecimalFormat("")));
@@ -159,6 +167,9 @@ class InfoPanel extends JPanel{
         mostCommonCategory.setForeground(TEXT_COLOR);
         add(mostCommonCategory, con);
     }
+    /*
+    * W zaleznosci od tego czy uzytkownik jest zalogowany ustawia wartosci pol tekstowych
+    * na domyslne albo na dane uzytkownika*/
     public static void reload(){
         if(!Main.isLogged()){
             userName.setText("Zaloguj się, aby korzytać z aplikacji");
@@ -178,6 +189,9 @@ class InfoPanel extends JPanel{
         }
     }
 }
+/*
+* Klasa reprezentuje panel wyświetlany w panelu głównym,
+* zawierający informacje o wydatkach użytkownika*/
 class ExpensePanel extends JPanel{
     private static final JComboBox<Integer> yearBox = new JComboBox<>();
     private static final JComboBox<String> monthBox = new JComboBox<>();
@@ -269,6 +283,9 @@ class ExpensePanel extends JPanel{
         add(expenseTablePanel, con);
 
     }
+    /*
+     * W zaleznosci od tego czy uzytkownik jest zalogowany ustawia wartosci pol tekstowych
+     * na domyslne albo na dane uzytkownika*/
     public static void reload(){
         ExpenseTablePanel.clear();
         if(Main.isLogged()){
@@ -287,7 +304,8 @@ class ExpensePanel extends JPanel{
             monthBox.setEnabled(false);
         }
     }
-
+    /*
+    * Wypelnia liste rozwijalna wartosciami [bierzacy_rok, 2018]*/
     private static void fillYearBox(){
         LocalDate currentDate = LocalDate.now();
         int year = currentDate.getYear();
@@ -295,6 +313,10 @@ class ExpensePanel extends JPanel{
             yearBox.addItem(i);
         }
     }
+    /*
+    * W zaleznosi od roku wypelnia liste rozwijalna nazwami miesiaca
+    * Jezeli jest bierzacy rok: ["Styczen", aktualny_miesiac]
+    * W przeciwnym wypadku wszystkie miesiace*/
     private static void fillMonthBox(){
         String[] months = {"Styczeń", "Luty", "Marzec",
                 "Kwiecień", "Maj", "Czerwiec",
@@ -317,6 +339,9 @@ class ExpensePanel extends JPanel{
         }
     }
 }
+/*
+* Klasa reprezentuje tabele, wyświetlającą wydatki użytkownika
+* w konkretnym roku oraz miesiącu*/
 class ExpenseTablePanel extends JScrollPane{
     private static final String[] columnNames = {"Nazwa", "Kwota", "Kategoria", "Data"};
     private static final DefaultTableModel model = new DefaultTableModel();

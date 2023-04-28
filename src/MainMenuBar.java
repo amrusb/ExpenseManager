@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-
+/*Klasa reprezentuje pasek menu, znajdujący się na górze okna*/
 public class MainMenuBar extends JMenuBar {
     private static final JMenu accountMenu = new JMenu("Konto");
     private static final JMenuItem createAccount = new JMenuItem("Utwórz", new ImageIcon("icons/create_account.png"));
@@ -60,6 +60,7 @@ public class MainMenuBar extends JMenuBar {
         });
         //EXIT
         exit.addActionListener( e-> {
+            if(Main.isLogged()) Main.setLoggedUser(null);
             Main.closeConnection();
             System.exit(0);
         });
@@ -86,7 +87,9 @@ public class MainMenuBar extends JMenuBar {
         add(accountMenu);
         add(expenseMenu);
     }
-
+    /*
+    * Po sprawdzeniu stanu zalogowaania uzytkownika ustawia dostepnosc
+    * elementow menu*/
     public static void reload(){
         if(Main.isLogged()){
             createAccount.setEnabled(false);
