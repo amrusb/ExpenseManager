@@ -13,18 +13,18 @@ import java.time.LocalDate;
 * Klasa reprezentuje główny panel aplikacji.
 * Zawiera dwa panele: ExpensePanel oraz InfoPanel*/
 public class MainPanel extends JPanel {
+    private static ExpensePanel leftPanel = new ExpensePanel();
+    private static InfoPanel  rightPanel = new InfoPanel();
     public MainPanel(){
         var GBlayout = new GridBagLayout();
         setLayout(GBlayout);
         var con = new GridBagConstraints();
         setBackground(new Color(227, 227, 227));
 
-        JPanel infoPanel = new InfoPanel();
-        JPanel expensePanel = new ExpensePanel();
 
         var border = BorderFactory.createEtchedBorder();
-        expensePanel.setBorder(border);
-        infoPanel.setBorder(border);
+        leftPanel.setBorder(border);
+        rightPanel.setBorder(border);
 
         con.weightx = 100;
         con.weighty = 100;
@@ -37,12 +37,12 @@ public class MainPanel extends JPanel {
         con.gridwidth = 2;
         con.gridheight = 1;
 
-        add(expensePanel, con);
+        add(leftPanel, con);
         con.fill = GridBagConstraints.HORIZONTAL;
         con.gridx = 2;
         con.gridwidth = 1;
         con.insets.set(10, 5, 10, 10);
-        add(infoPanel, con);
+        add(rightPanel, con);
 
     }
     /*
@@ -346,7 +346,6 @@ class ExpenseTablePanel extends JScrollPane{
     private static final String[] columnNames = {"Nazwa", "Kwota", "Kategoria", "Data"};
     private static final DefaultTableModel model = new DefaultTableModel();
     private static final JTable table = new JTable();
-    private static final JTextField mostCommonCategory = new JTextField("");
     private static final Color MAIN_COLOR = new Color(246, 246, 246);
     private static final Color HEADER_COLOR = new Color(40,40,40);
     private static final Color TEXT_COLOR = new Color(64, 64, 64);

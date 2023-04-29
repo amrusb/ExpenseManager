@@ -12,23 +12,34 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 
-/*
-* Klasa reprezentuje okno dialogowe sluzace do logowania do programu*/
-class LoggingDialog extends JDialog {
-    private static final int DEFAULT_WIDTH = 350;
-    private static final int DEFAULT_HEIGHT = 150;
-    private static final JTextField usernameField = new JTextField("");
-    private static final JPasswordField passwordField = new JPasswordField("");
+/*Klasa służąca do tworzenia podstawowego okna dialogowego,
+* po tej klasie dziedziczą wszystkie tworzone klasy okien dialogowych*/
+class MyDialog extends JDialog{
     private static final Color MAIN_COLOR = new Color(246, 246, 246);
-    public LoggingDialog(MainFrame owner) {
-        super(owner, "Zaloguj");
+    public MyDialog(int width, int height, MainFrame owner, String title){
+        super(owner, title);
         setLayout(new BorderLayout());
         setBackground(MAIN_COLOR);
+        setLayout(new BorderLayout());
 
         int scrn_w = MainFrame.getScreenSizeWidth();
         int scrn_h = MainFrame.getScreenSizeHeight();
-        setBounds((scrn_w - DEFAULT_WIDTH) / 2, (scrn_h - DEFAULT_HEIGHT) / 2, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        setBounds((scrn_w - width) / 2, (scrn_h - height) / 2, width, height);
         setResizable(false);
+
+    }
+    public MyDialog(){
+
+    }
+}
+/*
+* Klasa reprezentuje okno dialogowe sluzace do logowania do programu*/
+class LoggingDialog extends MyDialog {
+    private static final JTextField usernameField = new JTextField("");
+    private static final JPasswordField passwordField = new JPasswordField("");
+    public LoggingDialog(MainFrame owner) {
+        super(350, 150, owner, "Zaloguj");
+
 
         var loggingPanel = new JPanel();
         var layout = new GridLayout(2, 2);
@@ -106,7 +117,7 @@ class LoggingDialog extends JDialog {
 /*
 * Klasa reprezentuje okno dialogowe sluzace do tworzenia konta
 * */
-class CreateAccountDialog extends JDialog {
+class CreateAccountDialog extends MyDialog {
     private static final int DEFAULT_WIDTH = 350;
     private static final int DEFAULT_HEIGHT = 220;
     private static final JTextField userNameField = new JTextField();
@@ -116,12 +127,7 @@ class CreateAccountDialog extends JDialog {
 
 
     public CreateAccountDialog(MainFrame owner) {
-        super(owner, "Utwórz konto");
-        setLayout(new BorderLayout());
-        int scrn_w = MainFrame.getScreenSizeWidth();
-        int scrn_h = MainFrame.getScreenSizeHeight();
-        setBounds((scrn_w  - DEFAULT_WIDTH) / 2, (scrn_h - DEFAULT_HEIGHT) / 2, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setResizable(false);
+        super(350, 220, owner, "Utwórz konto");
 
         var createAccountPanel = new JPanel();
         var layout = new GridLayout(4,2);
@@ -240,22 +246,12 @@ class CreateAccountDialog extends JDialog {
 /*
  * Klasa reprezentuje okno dialogowe sluzace do edytowania danych konta uzytkownika
  * */
-class EditAccountDialog extends JDialog{
-    private static final int DEFAULT_WIDTH = 350;
-    private static final int DEFAULT_HEIGHT = 200;
+class EditAccountDialog extends MyDialog{
     private static final JTextField userNameField = new JTextField();
     private static final JTextField emailField = new JTextField();
     private static final JPasswordField passwordField = new JPasswordField();
-    private static final Color MAIN_COLOR = new Color(246, 246, 246);
     public EditAccountDialog(MainFrame owner){
-        super(owner, "Edytuj konto");
-        setLayout(new BorderLayout());
-        setBackground(MAIN_COLOR);
-        int scrn_w = MainFrame.getScreenSizeWidth();
-        int scrn_h = MainFrame.getScreenSizeHeight();
-        setBounds((scrn_w  - DEFAULT_WIDTH) / 2, (scrn_h - DEFAULT_HEIGHT) / 2, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setResizable(false);
-        setLayout(new BorderLayout());
+        super(350, 200, owner, "Edytuj konto");
 
         var editPanel = new JPanel();
         var layout = new GridLayout(3,2);
@@ -395,7 +391,7 @@ class EditAccountDialog extends JDialog{
  * Klasa reprezentuje okno dialogowe sluzace do dodania nowego wydatku
  * przez uzytkownika
  * */
-class AddNewExpenseDialog extends JDialog{
+class AddNewExpenseDialog extends MyDialog{
     private static final int DEFAULT_WIDTH = 350;
     private static final int DEFAULT_HEIGHT = 220;
     private static int userExpenseCounter = User.getExpenseCount();
@@ -406,11 +402,7 @@ class AddNewExpenseDialog extends JDialog{
     private static final JComboBox<String> categoryComboBox = new JComboBox<>();
 
     public AddNewExpenseDialog(MainFrame owner){
-        super(owner, "Dodaj nowy wydatek");
-        int scrn_w = MainFrame.getScreenSizeWidth();
-        int scrn_h = MainFrame.getScreenSizeHeight();
-        setLayout(new BorderLayout());
-        setBounds((scrn_w - DEFAULT_WIDTH )/ 2, (scrn_h - DEFAULT_HEIGHT )/ 2, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+        super(350, 220, owner, "Dodaj nowy wydatek");
 
         var addExpensePanel = new JPanel();
         var layout = new GridLayout(4, 2);
@@ -591,9 +583,7 @@ class AddNewExpenseDialog extends JDialog{
 /*
  * Klasa reprezentuje okno dialogowe sluzace do edytowania wydatkow przez uzytkownika
  * */
-class EditExpenseDialog extends JDialog{
-    private static final int DEFAULT_WIDTH = 450;
-    private static final int DEFAULT_HEIGHT = 300;
+class EditExpenseDialog extends MyDialog{
     private static JComboBox<String> expenseNameComboBox = new JComboBox<>();
     private static final JTextField expenseNameField = new JTextField();
     private static final JFormattedTextField amountField = new JFormattedTextField(new NumberFormatter(new DecimalFormat("0.00")));
@@ -601,11 +591,7 @@ class EditExpenseDialog extends JDialog{
     private static final JComboBox<String> categoryComboBox = new JComboBox<>();
     private static Expense currentExpense = User.getExpense(0);
     public EditExpenseDialog(MainFrame owner){
-        super(owner, "Edytuj wydatek");
-        int scrn_w = MainFrame.getScreenSizeWidth();
-        int scrn_h = MainFrame.getScreenSizeHeight();
-        setBounds((scrn_w - DEFAULT_WIDTH) / 2, (scrn_h - DEFAULT_HEIGHT) / 2, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setLayout(new BorderLayout());
+        super(450, 330, owner, "Edytuj wydatek");
 
         clear();
         currentExpense = User.getExpense(0);

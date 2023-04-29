@@ -1,4 +1,4 @@
-# Expense Menager
+# Expense Manager
 
 ---
 
@@ -6,7 +6,7 @@
 
 ## 1. Wstęp
 
-Projekt opisuje program komputerowy pozwalający na zarządzenie wydatkami użytkownika. Aplikacja wykorzystuje relacyjną bazę danych do gromadzenia, wyszukiwania i przetwarzania informacji o wydatkach użytkownika. Umożliwia użytkownikowi wprowadzanie zmian w bazie danych, dodając, edytując lub usuwając rekord odpowiadający wydatkowi lub kontu urzytkownika.
+***Expense Manager*** to program komputerowy, który umożliwia użytkownikowi kontrolowanie swojego budżetu poprzez zarządzanie wydatkami. Aplikacja wykorzystuje relacyjną bazę danych do gromadzenia, wyszukiwania i przetwarzania informacji o wydatkach użytkownika. Program pozwala użytkownikowi na wprowadzanie zmian w bazie danych, dodając, edytując lub usuwając rekord odpowiadający wydatkowi lub kontu użytkownika.
 
 ## 2. Projekt systemu
 
@@ -40,7 +40,7 @@ Baza danych została zaimplementowana w systemie MySQL.
   
 #### Diagram encji
 
-![entity_diagram](documentation_files\entity_diagram.png)
+![entity_diagram](documentation_files/entity_diagram.png)
 
 ### 2.2. Projekt aplikacji użytkownika
 
@@ -49,32 +49,35 @@ Zaprojektowana aplikacja umożliwia zarządzanie bazą danych przez użytkownika
 Aplikacja została zaimplementowana w języku Java.
 
 ### Opis klas
+
 * **```Main```** - klasa zawierająca metodę `main`, a także pola przechowujące obiekt zalogowanego użytkownika oraz obiekt połączenia z bazą danych. 
 
 ##### Klasy odpowiadające za komunikacje z bazą danych
 
-* **```User```** - klasa reprezentuje konkretnego użytkownika aplikacji, posiada pola, które go opisują oraz metody, umożliwiające zarządzeniem kontem oraz wydatkami.
-* **```Expense```** - klasa reprezentuje pojedynczy wydatek dokonany przez uzytkownika, posiada pola opisujące wydatek oraz metody, które pozwalają na dodawanie,usuwanie oraz edycję w bazie danych.
+* **```User```** - klasa reprezentuje konkretnego użytkownika aplikacji, posiada pola, które jednoznacznie go opisują oraz metody, umożliwiające zarządzeniem kontem oraz wydatkami.
+* **```Expense```** - klasa reprezentuje pojedynczy wydatek dokonany przez uzytkownika, posiada pola go opisujące oraz metody, które pozwalają na dodawanie, usuwanie oraz jego edycję w bazie danych.
 * **```DataBaseConnector```** - klasa umożliwiająca nawiązanie połączenia z bazą danych. Zawiera pola, które przechowują wszystkie niezbędne dane do nawiązania połączenia oraz metodę, która je nawiązuje.
   
 ##### Klasy odpowiadające za interfejs graficzny
 
-* **```MainFrame```** - klasa reprezentuje główną ramkę programu. Zawiera pola
+* **```MainFrame```** - klasa reprezentuje główną ramkę programu.
 * **```MainPanel```** - klasa reprezentuje główny panel aplikacji, zawierający informacje o wydatkach oraz o użytkowniku.
 * **```ExpensePanel```** - klasa reprezentuje panel wyświetlany w panelu głównym, zawierający informacje o wydatkach użytkownika.
-* **```ExpenseTabelPanel```** - klasa reprezentuje tabele, wyświetlającą wydatki użytkownika w konkretnym roku oraz miesiącu.
+* **```ExpenseTabelPanel```** - klasa reprezentuje tabelę, wyświetlającą wydatki użytkownika w konkretnym roku oraz miesiącu pobrane z bazy danych.
 * **```InfoPanel```** - klasa reprezentuje panel wyświetlany w panelu głównym, zawierający informacje o zalogowanym użytkowniku.
 * **```MenuBar```** - klasa reprezentuje pasek menu, znajdujący się na górze okna wraz z jej elementami umożliwiającymi zarządzenie kontem oraz wydatkami.
-* **```LoggingDialog```** - klasa reprezentuje okno dialogowe służące do logowania do programu.
-* **```CreateAccountDialog```** -klasa reprezentuje okno dialogowe służące do tworzenia konta.
-* **```EditAccountDialog```** - klasa reprezentuje okno dialogowe służące do edytowania danych konta użytkownika.
-* **```AddNewExpenseDialog```** - klasa reprezentuje okno dialogowe służące do dodania nowego wydatku przez użytkownika.
-* **```EditExpenseDialog```** - klasa reprezentuje okno dialogowe służące do edytowania wydatkow przez użytkownika.
+* **```MyDialog```** - klasa reprezentuje proste okno dialogowe, niezawierające żadnych pól. Służy do dziedziczenia przez klasy potomne podstawowych właściwości okna dialogowego.
+* **```LoggingDialog```** - klasa dziedzicząca po klasie `MyDialog`, reprezentuje okno dialogowe służące do logowania do programu.
+* **```CreateAccountDialog```** -klasa dziedzicząca po klasie `MyDialog`, reprezentuje okno dialogowe służące do tworzenia konta.
+* **```EditAccountDialog```** - klasa dziedzicząca po klasie `MyDialog`, reprezentuje okno dialogowe służące do edytowania danych konta użytkownika.
+* **```AddNewExpenseDialog```** - klasa dziedzicząca po klasie `MyDialog`, reprezentuje okno dialogowe służące do dodania nowego wydatku przez użytkownika.
+* **```EditExpenseDialog```** - klasa dziedzicząca po klasie `MyDialog`, reprezentuje okno dialogowe służące do edytowania wydatkow przez użytkownika.
+* **```DialogFactory```** - klasa implementuje wzorzec projektory `factory`, udostępniając metodę tworzącą okno dialogowe zależne od przekazanego typu.
 
 ### 2.3. Struktura folderów
 
-* ```database``` - skrypty SQL do utworzenia bazy danych oraz do zapełnienia jej przykładowymi rekordami,
-* ```icons``` - ikony używane przez aplikacje ze strony [freepik](https://www.freepik.com/) oraz [FontAwesome](https://fontawesome.com/)
+* ```database``` - skrypty SQL do utworzenia bazy danych oraz do zapełnienia jej przykładowymi danymi,
+* ```icons``` - ikony używane przez aplikacje, pobrane ze strony [freepik](https://www.freepik.com/) oraz [FontAwesome](https://fontawesome.com/)
 * ```lib``` - biblioteki zewnętrzne używane przez aplikacje
 * ```out```
   * ```artifacts``` - pliki artefaktów
@@ -84,16 +87,18 @@ Aplikacja została zaimplementowana w języku Java.
   
 ## 3. Instalacja i konfigurowanie systemu
 
-W celu poprawnego działania aplikacji konieczne jest uruchomienie skryptu `SQL`, tworzącego bazę danych wykorzystując odpowiednie oprogramowanie zarządzające bazami danych systemu MySQL (np.: MySQL Workbench, phpMyAdmin) lub w konsoli/terminalu korzystając z opowiednich poleceń:
+W celu poprawnego działania aplikacji konieczne jest uruchomienie skryptu `SQL`, tworzącego bazę danych, wykorzystując odpowiednie oprogramowanie zarządzające bazami danych systemu MySQL (np.: MySQL Workbench, phpMyAdmin) lub w konsoli/terminalu korzystając z opowiednich poleceń:
 
 >`mysql -u [<username>] -p`
 >
 > `source database/create_database.sql`
 
-Baza danych powinna zaostać utworzona na adresie `127.0.0.1` oraz porcie `3306`. Skrypt tworzący bazę danych znajduje się w `database/create_database.sql`. 
+Baza danych powinna zaostać utworzona na adresie IP `127.0.0.1` oraz porcie `3306`. 
+
+Skrypt tworzący bazę danych znajduje się w `database/create_database.sql`. 
 
 Aby zapełnić bazę danych przykładowymi danymi należy analogicznie uruchomić skrypty `SQL`:
-* `database/insert_example_users.sql`  - w celu dodania przykąłdowych użytkowników,
+* `database/insert_example_users.sql`  - w celu dodania przykładowych użytkowników,
 * `database/insert_example_expenses.sql` - w celu dodania przykładowych wydatków.
 
 Stworzona aplikacja znajduje się w skompresowanym pliku `.jar` znajdującym się w `out/artifacts/ExpenseManager_jar/ExpenseManager.jar`. 
@@ -101,7 +106,7 @@ Stworzona aplikacja znajduje się w skompresowanym pliku `.jar` znajdującym si�
 Aby uruchomić ten plik należy zainstalować wirtualną maszynę Java (JVC), a następnie uruchomić plik `.jar` poprzez wiersz poleceń:
 >`java -jar out/artifacts/ExpenseManager_jar/ExpenseManager.jar`
 
-Albo uruchamiając plik w zainstalowanym wcześniej dowolnym Java Runtime Environment (JRE).
+albo uruchamiając plik w zainstalowanym wcześniej dowolnym Java Runtime Environment (JRE).
 
 
 
@@ -110,15 +115,17 @@ Albo uruchamiając plik w zainstalowanym wcześniej dowolnym Java Runtime Enviro
 
 Po uruchomieniu programu, użytkownik ma możliwość zalogowania się, utworzenia nowego konta lub wyjścia z aplikacji. Opcje te dostępne są w pasku menu, w zakładce *Konto*.
 
-Po wybraniu opcji *Zaloguj*, użytkownik proszony jest o podanie nazwy konta oraz hasła. Następnie program weryfikuje czy użytkownik o takiej nazwie znajduje się w bazie danych. Jeżeli tak, sprawdza zgodność wprowadzonego hasła, a następnie wyświetla odpowiednie komunikaty.
+Po wybraniu opcji *Zaloguj*, program wyświetla odpowiednie okno dialogowe, a użytkownik proszony jest o podanie nazwy konta oraz hasła. Następnie program weryfikuje istnienie użytkownik o takiej nazwie w bazie danych. Jeżeli weryfikacja przebiegnie poprawnie, program sprawdza zgodność wprowadzonego hasła, a następnie wyświetla odpowiednie komunikaty.
 
-Po wybraniu opcji *Utwórz*, użytkownik proszony jest o podanie nazwy konta, adresu e-mail, hasła oraz ponownie hasła w celu weryfikacji zgodności. Następnei program weryfikuje zgodność hasła, poprawność adresu e-mail oraz dostępność nazwy użytkownika i adresu e-mail w bazie danych. Na koniec program dodaje nowy rekord do tabeli *users* w bazie danych i wyświetla odpowieni komunikat.
+Po wybraniu opcji *Utwórz*, program wyświetla odpowiednie okno dialogowe, a użytkownik proszony jest o podanie nazwy konta, adresu e-mail, hasła oraz ponownie hasła w celu weryfikacji zgodności. Następnie program weryfikuje zgodność hasła, poprawność adresu e-mail oraz dostępność nazwy użytkownika i adresu e-mail w bazie danych. Na koniec program dodaje nowy rekord do tabeli `users` w bazie danych i wyświetla odpowieni komunikat.
 
-Po wybraniu opcji *Wyjdź* program kończy działanie.
+Po wybraniu opcji *Wyjdź* program kończy działanie, a użytkownik zostaje wylogowany.
+
+---
 
 Po pozytywnym zalogowaniu się użytkownika do konta, informacjie w głównym panelu aplikacji zostają zaktualizowane.
 
-W panelu wydatków zostają wyświetlone wydatki użytkownika w bierzącym miesiącu, w bierzącym roku. Użytkownik, korzystając z dwóch list rozwijalnych, ma możliwość zmiany miesiąca oraz roku, w celu wyświetlenia innych wydatków. Rozwijala lista z lat zawiera lata od bierzącego, do roku 2018 włącznie, natomiast rozwijalna lista miesięcy zawiera nazwy miesięcy zależne od wyświetlanego roku. Jeżeli użyutkownik wybrał bierzący rok, wyświetlone zostają nazwy miesięcy od pierwszego miesiąca roku (styczeń) do bierzącego miesiąca. W przeciwnym wypadku zostają wyświetlone wszystkie nazwy miesięcy.
+W panelu wydatków zostają wyświetlone wydatki użytkownika w bierzącym miesiącu bierzącego roku. Użytkownik, korzystając z dwóch list rozwijalnych, ma możliwość zmiany miesiąca oraz roku w celu wyświetlenia innych wydatków. Rozwijala lista z lat zawiera lata od bierzącego do roku 2018 włącznie, natomiast rozwijalna lista miesięcy zawiera nazwy miesięcy zależne od wyświetlanego roku. Jeżeli użyutkownik wybrał bierzący rok, wyświetlone zostają nazwy miesięcy od pierwszego miesiąca roku (styczeń) do bierzącego miesiąca. W przeciwnym wypadku zostają wyświetlone wszystkie nazwy miesięcy.
 
 W panelu informacji zostaje wyświetlona nazwa aktualnie zalogowanego użytkownika oraz *podsumoawanie*, na które składa się:
 
@@ -127,11 +134,11 @@ W panelu informacji zostaje wyświetlona nazwa aktualnie zalogowanego użytkowni
 * średnia wydatków użytkownika w bierzącym miesiącu, obliczona w bazie danych,
 * nazwa kategori wydatku, którego największą ilość użytkownik dokonał w bierzącym miesiącu.
 
-Po pozytywnym zalogowaniu się użytkownika zostaje również zaktualizowany pasek menu. Opcja *Zaloguj* oraz *Utwórz* zostaje zdezaktywowana, natomiast zostaje aktywowana zakładka *Wydatek*, w której znajdują się opcje *Dodaj* oraz *Edytuj*, a w zakładce *Konto* zostają aktywowane opcje *Wyloguj* oraz *Edytuj*.
+Po pozytywnym zalogowaniu się użytkownika zostaje również zaktualizowany pasek menu. Opcja *Zaloguj* oraz *Utwórz* zostaje zdezaktywowana, natomiast zakładka *Wydatek*, w której znajdują się opcje *Dodaj* oraz *Edytuj* oraz w zakładce *Konto* opcje *Wyloguj* oraz *Edytuj* są aktywowane.
 
 Po wybraniu opcji *Wyloguj* użytkownik zostaje wylogowany z aplikacji, w panelu głównym zostają wyświetlone dane domyślne oraz dezaktywowany wybór miesiąca oraz roku w odpowiadających im listach rozwijalnych, a w pasku menu zostają dezaktywowane opcje i zakładki, które były aktywowane w momencie logowania użytkownika.
 
-Po wybraniu opcji *Edytuj* program wyświetli okno dialogowe i użytkownik zostaje proszony o wprowadzenie zaktualizowanch danych. Po zatwierdzeniu ich następuje sprawdzenie poprawności adresu e-mail, dostępności nazwy użytkownika w bazie danych oraz zaktualizowanie odpowiedniego rekordu w bazie danych.
+Po wybraniu opcji *Edytuj* program wyświetla okno dialogowe, a użytkownik zostaje proszony o wprowadzenie zaktualizowanch danych. Po zatwierdzeniu ich następuje sprawdzenie poprawności adresu e-mail, dostępności nazwy użytkownika w bazie danych oraz zaktualizowanie odpowiedniego rekordu w bazie danych.
 
 W oknie dialogowym edycji konta użytkownik ma również opcję usunięcia konta. Wówczas, po wyświetleniu ostrzegającego komunikatu, zostaje usunięty dany rekord z bazy danych z tabeli `users` jak rónież wszyskie rekordy z tabele `expenses` dla odpowiadającego pola `user_id`.
 

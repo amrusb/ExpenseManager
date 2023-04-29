@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /*
-* */
+* Klasa reprezentuje główną ramkę programu*/
 public class MainFrame extends JFrame {
     private static final int SCREEN_SIZE_WIDTH = Toolkit.getDefaultToolkit().getScreenSize().width;
     private static final int SCREEN_SIZE_HEIGHT = Toolkit.getDefaultToolkit().getScreenSize().height;
@@ -12,6 +12,8 @@ public class MainFrame extends JFrame {
     private static final Font HEADER_FONT = new Font("SansSerif", Font.BOLD, 20);
     private static final Font HEADER_2_FONT = new Font("SansSerif", Font.BOLD, 13);
     private static final Font BASIC_FONT = new Font("SansSerif", Font.PLAIN, 13);
+    private static MainMenuBar menuBar;
+    private static MainPanel mainPanel;
 
     public MainFrame(){
         setTitle(PROGRAM_NAME);
@@ -24,8 +26,13 @@ public class MainFrame extends JFrame {
         setIconImage(icon.getImage());
         setBackground(new Color(64, 64, 64));
         setLayout(new BorderLayout());
-        add(new MainMenuBar(this), BorderLayout.NORTH);
-        add(new MainPanel(), BorderLayout.CENTER);
+
+        menuBar = new MainMenuBar(this);
+        add(menuBar, BorderLayout.NORTH);
+
+        mainPanel = new MainPanel();
+        add(mainPanel, BorderLayout.CENTER);
+
         MainMenuBar.reload();
     }
     /* Metoda zwraca szerokosc ekranu

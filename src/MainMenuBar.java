@@ -12,7 +12,7 @@ public class MainMenuBar extends JMenuBar {
     private static final JMenu expenseMenu = new JMenu("Wydatek");
     private static final JMenuItem addExpense = new JMenuItem("Dodaj", new ImageIcon("icons/add_expense.png"));
     private static final JMenuItem editExpense = new JMenuItem("Edytuj", new ImageIcon("icons/edit_expense.png"));
-    private static JDialog dialog = null;
+    private static MyDialog dialog = null;
     public MainMenuBar(MainFrame parent){        //ACCOUNT BAR
         setBorder(BorderFactory.createEmptyBorder());
         setPreferredSize(new Dimension(MainFrame.getScreenSizeWidth(), 30));
@@ -34,13 +34,14 @@ public class MainMenuBar extends JMenuBar {
         //LOGIN
         logIn.addActionListener(e->{
             if(dialog != null) dialog.setVisible(false);
-            dialog = new LoggingDialog(parent);
+            dialog = DialogFactory.createDialog(DialogType.LOGIN, parent);
             dialog.setVisible(true);
         });
         //CREATE ACCOUNT
         createAccount.addActionListener(e->{
+            System.out.println(e.getID());
             if(dialog != null) dialog.setVisible(false);
-            dialog = new CreateAccountDialog(parent);
+            dialog = DialogFactory.createDialog(DialogType.CREATE_ACCOUNT, parent);
             dialog.setVisible(true);
         });
         //LOGOUT
@@ -54,8 +55,9 @@ public class MainMenuBar extends JMenuBar {
         });
         //EDIT ACCOUNT
         editAccount.addActionListener(e->{
+            System.out.println(e.getID());
             if(dialog != null) dialog.setVisible(false);
-            dialog = new EditAccountDialog(parent);
+            dialog = DialogFactory.createDialog(DialogType.EDIT_ACCOUNT, parent);
             dialog.setVisible(true);
         });
         //EXIT
@@ -74,14 +76,16 @@ public class MainMenuBar extends JMenuBar {
         editExpense.setFont(MainFrame.getBasicFont());
         //ADD EXPENSE
         addExpense.addActionListener(e->{
+            System.out.println(e.getID());
             if(dialog != null) dialog.setVisible(false);
-            dialog = new AddNewExpenseDialog(parent);
+            dialog = DialogFactory.createDialog(DialogType.ADD_EXPENSE, parent);
             dialog.setVisible(true);
         });
         //EDIT EXPENSE
         editExpense.addActionListener(e->{
+            System.out.println(e.getID());
             if(dialog != null) dialog.setVisible(false);
-            dialog = new EditExpenseDialog(parent);
+            dialog = DialogFactory.createDialog(DialogType.EDIT_EXPENSE, parent);
             dialog.setVisible(true);
         });
         add(accountMenu);
