@@ -118,7 +118,7 @@ class InfoPanel extends JPanel{
 
         con.gridy = 4;
         con.gridx = 0;
-        var currentMonthLabel = new JLabel("Bierzący miesiąc:");
+        var currentMonthLabel = new JLabel("Bieżący miesiąc:");
         currentMonthLabel.setFont(MainFrame.getHeader2Font());
         currentMonthLabel.setForeground(TEXT_COLOR);
         add(currentMonthLabel, con);
