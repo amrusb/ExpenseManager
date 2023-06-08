@@ -103,7 +103,7 @@ Aby zapełnić bazę danych przykładowymi danymi należy analogicznie uruchomi�
 
 Stworzona aplikacja znajduje się w skompresowanym pliku `.jar` znajdującym się w `out/artifacts/ExpenseManager_jar/ExpenseManager.jar`. 
 
-Aby uruchomić ten plik należy zainstalować wirtualną maszynę Java (JVC), a następnie uruchomić plik `.jar` poprzez wiersz poleceń:
+Aby uruchomić ten plik należy zainstalować wirtualną maszynę Java (JVM), a następnie uruchomić plik `.jar` poprzez wiersz poleceń:
 >`java -jar out/artifacts/ExpenseManager_jar/ExpenseManager.jar`
 
 albo uruchamiając plik w zainstalowanym wcześniej dowolnym Java Runtime Environment (JRE).
